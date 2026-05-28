@@ -51,7 +51,7 @@ document.addEventListener('DOMContentLoaded', () => {
     countBar.classList.toggle('hidden', tab !== 'exercises')
 
     if (tab === 'examples') {
-      exampleEngine.render(cases)
+      exampleEngine.render(cases, theme)
     } else if (tab === 'exercises') {
       exerciseEngine.render(cases, theme, exerciseCount)
     } else if (tab === 'czytanki') {

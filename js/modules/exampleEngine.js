@@ -7,7 +7,7 @@ class ExampleEngine {
     }
   }
 
-  render(cases) {
+  render(cases, theme = 'all') {
     const active = cases.includes('mixed')
       ? ['nominative', 'instrumental']
       : cases.filter(c => c !== 'mixed')
@@ -23,6 +23,16 @@ class ExampleEngine {
       const data = this.caseData[caseId]
       if (!data || !data.examples || data.examples.length === 0) return
 
+      let filteredExamples = data.examples
+      if (theme !== 'all') {
+        filteredExamples = data.examples.filter(ex => {
+          const exThemes = ex.themes || ['general']
+          return exThemes.includes('all') || exThemes.includes(theme)
+        })
+      }
+
+      if (filteredExamples.length === 0) return
+
       const section = document.createElement('div')
       section.className = 'mb-6'
       if (idx > 0) section.style.marginTop = '1rem'
@@ -30,14 +40,14 @@ class ExampleEngine {
       const title = document.createElement('h3')
       title.className = 'text-lg font-semibold text-slate-800 mb-3 capitalize'
       title.textContent = caseId === 'nominative'
-        ? 'Nominative (Mianownik) — Examples'
-        : 'Instrumental (Narzędnik) — Examples'
+        ? 'Nominative — Examples'
+        : 'Instrumental — Examples'
       section.appendChild(title)
 
       const grid = document.createElement('div')
       grid.className = 'grid gap-3'
 
-      data.examples.forEach((ex, i) => {
+      filteredExamples.forEach((ex) => {
         const card = document.createElement('div')
         card.className = 'example-card bg-white rounded-xl p-4 border border-slate-100 shadow-sm'
         card.innerHTML = `
@@ -52,11 +62,15 @@ class ExampleEngine {
       this.container.appendChild(section)
     })
 
-    gsap.fromTo(
-      this.container.querySelectorAll('.example-card'),
-      { opacity: 0, y: 20 },
-      { opacity: 1, y: 0, duration: 0.3, stagger: 0.05, ease: 'power2.out' }
-    )
+    const cards = this.container.querySelectorAll('.example-card')
+    if (cards.length > 0) {
+      gsap.fromTo(cards,
+        { opacity: 0, y: 20 },
+        { opacity: 1, y: 0, duration: 0.3, stagger: 0.05, ease: 'power2.out' }
+      )
+    } else {
+      this.showEmpty()
+    }
   }
 
   showEmpty() {

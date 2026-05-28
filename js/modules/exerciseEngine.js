@@ -50,21 +50,20 @@ class ExerciseEngine {
 
     if (activeCases.length === 0) return
 
+    const perCase = Math.ceil(count / activeCases.length)
     const allExercises = []
 
     for (const caseId of activeCases) {
       const data = this.caseData[caseId]
       if (!data || !data.templates || data.templates.length === 0) continue
 
-      for (let i = 0; i < count; i++) {
+      for (let i = 0; i < perCase; i++) {
         const ex = this.buildExercise(caseId, data, theme)
         if (ex) allExercises.push(ex)
       }
     }
 
-    this.currentSet = isMixed || activeCases.length > 1
-      ? shuffle(allExercises)
-      : allExercises
+    this.currentSet = shuffle(allExercises).slice(0, count)
   }
 
   buildExercise(caseId, data, theme = 'all') {

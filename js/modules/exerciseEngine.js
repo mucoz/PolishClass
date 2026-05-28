@@ -41,7 +41,7 @@ class ExerciseEngine {
     this.saveMastery()
   }
 
-  generateExercises(selectedCases, theme = 'all', count = CONFIG.exercisesPerCase) {
+  generateExercises(selectedCases, theme = 'all', count = CONFIG.defaultExerciseCount) {
     this.currentTheme = theme
     const isMixed = selectedCases.includes('mixed')
     const activeCases = isMixed
@@ -118,8 +118,8 @@ class ExerciseEngine {
     }
   }
 
-  render(selectedCases, theme = 'all') {
-    this.generateExercises(selectedCases, theme)
+  render(selectedCases, theme = 'all', count = CONFIG.defaultExerciseCount) {
+    this.generateExercises(selectedCases, theme, count)
     this.displayExercises()
   }
 
@@ -141,11 +141,17 @@ class ExerciseEngine {
         <div class="exercise-card bg-white rounded-xl p-4 border border-slate-100 shadow-sm" data-id="${ex.id}">
           <div class="flex items-start gap-2 mb-2">
             <span class="text-xs font-semibold text-slate-400 bg-slate-100 rounded-full w-6 h-6 flex items-center justify-center shrink-0">${i + 1}</span>
-            <div class="flex-1">
-              <div class="text-base font-medium text-slate-900 mb-1">
-                ${parts[0]}<span class="inline-block border-b-2 border-indigo-300 min-w-[80px] px-1 text-indigo-600">${ex.answer ? '______' : ''}</span>${parts[1] || ''}
+            <div class="flex-1 min-w-0">
+              <div class="text-base font-medium text-slate-900 mb-1 leading-relaxed">
+                ${parts[0]}<span class="inline-block border-b-2 border-dashed border-indigo-300 min-w-[80px] px-1 text-indigo-600">______</span>${parts[1] || ''}
               </div>
-              <div class="text-xs text-slate-400 italic">${ex.hint}</div>
+              <div class="inline-flex items-center gap-1 text-xs font-semibold text-indigo-600 bg-indigo-50 px-2 py-1 rounded-md mt-1">
+                Use: <span class="text-indigo-800">${ex.baseWord}</span>
+                <span class="text-indigo-300 mx-0.5">·</span>
+                ${ex.case}
+                <span class="text-indigo-300 mx-0.5">·</span>
+                ${ex.gender}
+              </div>
               <div class="text-xs text-slate-300 mt-1">${ex.translation}</div>
             </div>
           </div>
@@ -163,10 +169,10 @@ class ExerciseEngine {
     html += `
       <div class="flex gap-2 pt-2">
         <button id="completeBtn" class="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-3 px-6 rounded-xl transition-all active:scale-[0.98] shadow-md shadow-indigo-200">
-          ✅ Complete
+          Complete
         </button>
         <button id="shuffleBtn" class="bg-white hover:bg-slate-50 text-slate-600 font-medium py-3 px-4 rounded-xl border border-slate-200 transition-all active:scale-[0.98]">
-          🔀
+          Shuffle
         </button>
       </div>
     `
@@ -178,8 +184,7 @@ class ExerciseEngine {
   }
 
   bindEvents() {
-    const inputs = this.container.querySelectorAll('.exercise-input')
-    inputs.forEach(inp => {
+    this.container.querySelectorAll('.exercise-input').forEach(inp => {
       inp.addEventListener('focus', e => {
         if (window.polishKeyboard) window.polishKeyboard.focus(e.target)
       })
@@ -205,38 +210,29 @@ class ExerciseEngine {
     const cards = this.container.querySelectorAll('.exercise-card')
     if (cards.length === 0) return
 
-    let idx = 0
-    const checkNext = () => {
-      if (idx >= cards.length) {
-        this.showSummary()
-        return
-      }
-      const card = cards[idx]
+    cards.forEach(card => {
       const input = card.querySelector('.exercise-input')
       const feedback = card.querySelector('.feedback')
       const ex = this.currentSet.find(e => e.id === card.dataset.id)
-      if (!ex) { idx++; checkNext(); return }
+      if (!ex) return
 
       const userAnswer = input.value.trim().toLowerCase()
       const correctAnswer = ex.answer.toLowerCase()
 
       if (userAnswer === correctAnswer) {
         input.classList.add('correct')
-        feedback.innerHTML = '<span class="text-green-600 font-medium">✓ Correct!</span>'
+        feedback.innerHTML = '<span class="text-green-600 font-semibold">✓ Correct</span>'
         this.updateMastery(ex.masteryKey, true)
       } else {
         input.classList.add('wrong')
-        feedback.innerHTML = `<span class="text-red-500">✗ Correction: <span class="font-semibold">${ex.answer}</span></span>`
+        feedback.innerHTML = `<span class="text-red-500 font-semibold">✗ Correction: <span class="text-red-700">${ex.answer}</span></span>`
         this.updateMastery(ex.masteryKey, false)
       }
 
       input.disabled = true
-      idx++
-      gsap.to(card, { x: userAnswer === correctAnswer ? [4, -4, 0] : 0, duration: 0.2 })
-      setTimeout(checkNext, 350)
-    }
+    })
 
-    checkNext()
+    this.showSummary()
   }
 
   showSummary() {
@@ -251,7 +247,7 @@ class ExerciseEngine {
       <div class="text-2xl font-bold ${correct === total ? 'text-green-600' : 'text-indigo-600'}">
         ${correct}/${total} correct
       </div>
-      <div class="text-xs text-slate-400 mt-1">${wrong > 0 ? wrong + ' to review' : 'Perfect! 🎉'}</div>
+      <div class="text-xs text-slate-400 mt-1">${wrong > 0 ? wrong + ' to review' : 'Perfect!'}</div>
     `
 
     this.container.querySelector('.space-y-4').appendChild(summary)

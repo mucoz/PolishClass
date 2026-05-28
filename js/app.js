@@ -10,6 +10,23 @@ document.addEventListener('DOMContentLoaded', () => {
 
   window.polishKeyboard = polishKeyboard
 
+  let exerciseCount = CONFIG.defaultExerciseCount
+
+  const countBar = document.getElementById('countBar')
+  CONFIG.exerciseCounts.forEach(n => {
+    const btn = document.createElement('button')
+    btn.className = `count-btn px-2 py-0.5 rounded text-xs font-medium border transition-all ${n === exerciseCount ? 'active' : ''}`
+    btn.dataset.count = n
+    btn.textContent = n
+    countBar.appendChild(btn)
+    btn.addEventListener('click', () => {
+      if (n === exerciseCount) return
+      exerciseCount = n
+      countBar.querySelectorAll('.count-btn').forEach(b => b.classList.toggle('active', +b.dataset.count === n))
+      if (tabManager.activeTab === 'exercises') renderActive()
+    })
+  })
+
   function countWords() {
     const m = A1_NOUNS.masculine?.length || 0
     const f = A1_NOUNS.feminine?.length || 0
@@ -31,10 +48,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const cases = topicManager.getSelected()
     const theme = themeManager.getTheme()
 
+    countBar.classList.toggle('hidden', tab !== 'exercises')
+
     if (tab === 'examples') {
       exampleEngine.render(cases)
     } else if (tab === 'exercises') {
-      exerciseEngine.render(cases, theme)
+      exerciseEngine.render(cases, theme, exerciseCount)
     } else if (tab === 'czytanki') {
       storyEngine.render(cases, theme)
     }
@@ -53,11 +72,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   tabManager.onChange = tab => switchTab(tab)
   topicManager.onChange = () => renderActive()
-  themeManager.onChange = () => {
-    if (tabManager.activeTab === 'exercises' || tabManager.activeTab === 'czytanki') {
-      renderActive()
-    }
-  }
+  themeManager.onChange = () => renderActive()
   levelManager.onChange = () => renderActive()
 
   document.getElementById('headerShuffleBtn').addEventListener('click', () => {

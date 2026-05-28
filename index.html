@@ -4,13 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>PolishClass — Learn Polish</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
 </head>
-<body class="h-full bg-gradient-to-br from-slate-50 via-white to-indigo-50 font-['Inter']">
+<body class="h-full bg-gradient-to-br from-slate-50 via-white to-indigo-50 font-[system-ui,-apple-system,sans-serif] antialiased">
   <div id="app" class="h-full flex flex-col max-w-2xl mx-auto px-3 sm:px-4 relative">
 
     <header class="sticky top-0 z-40 pt-3 pb-2 bg-gradient-to-br from-slate-50 via-white to-indigo-50">
@@ -22,31 +18,29 @@
       </div>
 
       <div class="flex gap-1 p-0.5 bg-white/90 backdrop-blur rounded-2xl shadow-sm border border-slate-200" id="tabBar">
-        <button data-tab="examples" class="tab-btn flex-1 py-2.5 px-4 rounded-xl font-medium text-sm transition-all">
-          <span class="hidden sm:inline">📖 </span>Examples
-        </button>
-        <button data-tab="exercises" class="tab-btn flex-1 py-2.5 px-4 rounded-xl font-medium text-sm transition-all">
-          <span class="hidden sm:inline">✏️ </span>Exercises
-        </button>
+        <button data-tab="examples" class="tab-btn flex-1 py-2.5 px-4 rounded-xl font-medium text-sm transition-all">Examples</button>
+        <button data-tab="exercises" class="tab-btn flex-1 py-2.5 px-4 rounded-xl font-medium text-sm transition-all">Exercises</button>
+        <button data-tab="czytanki" class="tab-btn flex-1 py-2.5 px-4 rounded-xl font-medium text-sm transition-all">Czytanki</button>
       </div>
 
       <div class="mt-2 flex flex-wrap gap-1.5" id="topicBar"></div>
 
+      <div class="mt-2 flex flex-wrap gap-1.5" id="themeBar"></div>
+
       <div class="mt-2 flex items-center justify-between">
         <div class="flex gap-1.5" id="levelBar"></div>
-        <button id="headerShuffleBtn" class="text-xs text-indigo-500 hover:text-indigo-700 font-medium px-2 py-1 rounded-lg hover:bg-indigo-50 transition-all">
-          🔀 Shuffle
-        </button>
+        <button id="headerShuffleBtn" class="text-xs text-indigo-500 hover:text-indigo-700 font-medium px-2 py-1 rounded-lg hover:bg-indigo-50 transition-all">Shuffle</button>
       </div>
 
       <div class="mt-1 text-[10px] text-slate-400 font-medium">
-        <span id="wordCount">0</span> nouns · <span id="adjCount">0</span> adjectives loaded
+        <span id="wordCount">0</span> nouns &middot; <span id="adjCount">0</span> adjectives loaded
       </div>
     </header>
 
     <main class="flex-1 overflow-y-auto pb-24 scroll-smooth" id="contentArea">
       <div id="exampleContent" class="py-2"></div>
-      <div id="exerciseContent" class="py-2"></div>
+      <div id="exerciseContent" class="py-2 hidden"></div>
+      <div id="czytankiContent" class="py-2 hidden"></div>
     </main>
 
     <div id="polishKeyboard" class="fixed bottom-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-xl border-t border-slate-200 shadow-2xl translate-y-full transition-transform duration-300 ease-in-out">
@@ -54,6 +48,7 @@
 
   </div>
 
+  <script src="js/lib/gsap.min.js"></script>
   <script src="js/config.js"></script>
   <script src="js/utils.js"></script>
   <script src="js/data/a1/nouns.js"></script>
@@ -61,11 +56,14 @@
   <script src="js/data/a1/nominative.js"></script>
   <script src="js/data/a1/instrumental.js"></script>
   <script src="js/data/a1/mixed.js"></script>
+  <script src="js/data/a1/stories.js"></script>
   <script src="js/modules/tabManager.js"></script>
   <script src="js/modules/topicManager.js"></script>
+  <script src="js/modules/themeManager.js"></script>
   <script src="js/modules/levelManager.js"></script>
   <script src="js/modules/exampleEngine.js"></script>
   <script src="js/modules/exerciseEngine.js"></script>
+  <script src="js/modules/storyEngine.js"></script>
   <script src="js/modules/polishKeyboard.js"></script>
   <script src="js/app.js"></script>
 </body>

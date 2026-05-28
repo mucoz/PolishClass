@@ -8,6 +8,7 @@ class ExerciseEngine {
       instrumental: A1_INSTRUMENTAL,
     }
     this.masteryStore = this.loadMastery()
+    this.currentTheme = 'all'
     this.onComplete = null
   }
 
@@ -40,7 +41,8 @@ class ExerciseEngine {
     this.saveMastery()
   }
 
-  generateExercises(selectedCases, count = CONFIG.exercisesPerCase) {
+  generateExercises(selectedCases, theme = 'all', count = CONFIG.exercisesPerCase) {
+    this.currentTheme = theme
     const isMixed = selectedCases.includes('mixed')
     const activeCases = isMixed
       ? ['nominative', 'instrumental']
@@ -55,7 +57,7 @@ class ExerciseEngine {
       if (!data || !data.templates || data.templates.length === 0) continue
 
       for (let i = 0; i < count; i++) {
-        const ex = this.buildExercise(caseId, data)
+        const ex = this.buildExercise(caseId, data, theme)
         if (ex) allExercises.push(ex)
       }
     }
@@ -65,18 +67,23 @@ class ExerciseEngine {
       : allExercises
   }
 
-  buildExercise(caseId, data) {
+  buildExercise(caseId, data, theme = 'all') {
     const template = pick(data.templates)
     const gender = template.gender || pick(['masculine', 'feminine', 'neuter'])
 
     const caseGenderKey = gender === 'masculine' ? 'masculine'
       : gender === 'feminine' ? 'feminine' : 'neuter'
 
-    const nouns = A1_NOUNS[caseGenderKey]
+    let nouns = A1_NOUNS[caseGenderKey]
     if (!nouns || nouns.length === 0) return null
+    if (theme !== 'all') nouns = nouns.filter(n => n[3] && n[3].includes(theme))
+    if (nouns.length === 0) return null
     const noun = pick(nouns)
 
-    const adj = pick(A1_ADJECTIVES)
+    let adjectives = A1_ADJECTIVES
+    if (theme !== 'all') adjectives = adjectives.filter(a => a[7] && a[7].includes(theme))
+    if (adjectives.length === 0) adjectives = A1_ADJECTIVES
+    const adj = pick(adjectives)
     const adjForm = getAdjForm(adj, caseId, gender)
     const nounForm = getNounForm(noun, caseId)
     const nounNom = noun[0]
@@ -111,8 +118,8 @@ class ExerciseEngine {
     }
   }
 
-  render(selectedCases) {
-    this.generateExercises(selectedCases)
+  render(selectedCases, theme = 'all') {
+    this.generateExercises(selectedCases, theme)
     this.displayExercises()
   }
 

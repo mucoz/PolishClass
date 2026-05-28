@@ -1,10 +1,12 @@
 document.addEventListener('DOMContentLoaded', () => {
   const tabManager = new TabManager('tabBar')
   const topicManager = new TopicManager('topicBar')
+  const themeManager = new ThemeManager('themeBar')
   const levelManager = new LevelManager('levelBar')
   const polishKeyboard = new PolishKeyboard('polishKeyboard')
   const exampleEngine = new ExampleEngine('exampleContent')
   const exerciseEngine = new ExerciseEngine('exerciseContent')
+  const storyEngine = new StoryEngine('czytankiContent')
 
   window.polishKeyboard = polishKeyboard
 
@@ -17,19 +19,24 @@ document.addEventListener('DOMContentLoaded', () => {
   }
   countWords()
 
-  const tabs = ['examples', 'exercises']
+  const tabs = ['examples', 'exercises', 'czytanki']
   const contentAreas = {
     examples: document.getElementById('exampleContent'),
     exercises: document.getElementById('exerciseContent'),
+    czytanki: document.getElementById('czytankiContent'),
   }
 
   function renderActive() {
     const tab = tabManager.activeTab
     const cases = topicManager.getSelected()
+    const theme = themeManager.getTheme()
+
     if (tab === 'examples') {
       exampleEngine.render(cases)
-    } else {
-      exerciseEngine.render(cases)
+    } else if (tab === 'exercises') {
+      exerciseEngine.render(cases, theme)
+    } else if (tab === 'czytanki') {
+      storyEngine.render(cases, theme)
     }
   }
 
@@ -46,6 +53,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
   tabManager.onChange = tab => switchTab(tab)
   topicManager.onChange = () => renderActive()
+  themeManager.onChange = () => {
+    if (tabManager.activeTab === 'exercises' || tabManager.activeTab === 'czytanki') {
+      renderActive()
+    }
+  }
   levelManager.onChange = () => renderActive()
 
   document.getElementById('headerShuffleBtn').addEventListener('click', () => {

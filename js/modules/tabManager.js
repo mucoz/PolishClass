@@ -2,16 +2,20 @@ class TabManager {
   constructor(containerId) {
     this.container = document.getElementById(containerId)
     this.buttons = this.container.querySelectorAll('.tab-btn')
-    this.activeTab = 'examples'
+    this.activeTab = null
     this.onChange = null
     this.init()
   }
 
   init() {
+    const first = this.buttons[0]
+    if (first) {
+      first.classList.add('active')
+      this.activeTab = first.dataset.tab
+    }
     this.buttons.forEach(btn => {
       btn.addEventListener('click', () => this.switch(btn.dataset.tab))
     })
-    this.switch('examples')
   }
 
   switch(tab) {

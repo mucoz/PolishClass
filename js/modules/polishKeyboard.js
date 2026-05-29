@@ -17,7 +17,6 @@ class PolishKeyboard {
   buildLayout() {
     let html = '<div class="kb-inner">'
     html += '<div class="kb-row">'
-    html += '<div class="kb-label">PL</div>'
     POLISH_SPECIAL.forEach(k => {
       html += `<div class="kb-key special-chars" data-key="${k}">${k}</div>`
     })

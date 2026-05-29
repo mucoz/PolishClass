@@ -61,6 +61,7 @@ document.addEventListener('DOMContentLoaded', () => {
     tabs.forEach(t => {
       contentAreas[t].classList.toggle('hidden', t !== tab)
     })
+    polishKeyboard.container.classList.toggle('hidden', tab !== 'exercises')
     if (tab !== 'exercises') {
       polishKeyboard.blur()
       document.querySelectorAll('.exercise-input-inline').forEach(inp => inp.blur())

@@ -68,6 +68,7 @@ class PolishKeyboard {
   }
 
   focus(input) {
+    if (this.container.classList.contains('hidden')) return
     this.activeInput = input
     this.show()
   }

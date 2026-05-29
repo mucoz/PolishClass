@@ -20,7 +20,6 @@ class PolishKeyboard {
     POLISH_SPECIAL.forEach(k => {
       html += `<div class="kb-key special-chars" data-key="${k}">${k}</div>`
     })
-    html += `<div class="kb-key" data-key="backspace">⌫</div>`
     html += '</div>'
     html += '</div>'
     return html

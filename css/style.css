@@ -20,7 +20,7 @@
 .exercise-input-inline.correct{border-bottom-color:#22c55e;color:#16a34a}
 .exercise-input-inline.wrong{border-bottom-color:#ef4444;color:#dc2626}
 .exercise-input-inline::placeholder{color:#cbd5e1;font-weight:400}
-.example-card{transition:all .2s}.example-card:hover{transform:translateY(-2px);box-shadow:0 4px 12px rgba(0,0,0,.05)}
+.example-card{transition:transform .2s,box-shadow .2s}.example-card:hover{transform:translateY(-2px);box-shadow:0 4px 12px rgba(0,0,0,.05)}
 .kb-key{display:flex;align-items:center;justify-content:center;min-width:40px;height:44px;background:#fff;border:1px solid #cbd5e1;border-radius:10px;font-size:17px;font-weight:600;color:#1e293b;cursor:pointer;user-select:none;transition:all .12s;flex:1;box-shadow:0 1px 3px rgba(0,0,0,.06)}
 .kb-key:hover{background:#f1f5f9;border-color:#94a3b8;transform:translateY(-1px);box-shadow:0 2px 6px rgba(0,0,0,.08)}
 .kb-key:active{background:#e2e8f0;transform:scale(.95);box-shadow:none}

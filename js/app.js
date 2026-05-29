@@ -112,7 +112,5 @@ document.addEventListener('DOMContentLoaded', () => {
   const savedTab = (() => { try { return localStorage.getItem(TAB_KEY) } catch {} })()
   switchTab(tabs.includes(savedTab) ? savedTab : 'examples')
 
-  requestAnimationFrame(() => renderActive())
-
   window.addEventListener('beforeunload', () => saveScroll(tabManager.activeTab))
 })

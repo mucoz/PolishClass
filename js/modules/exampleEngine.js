@@ -68,14 +68,7 @@ class ExampleEngine {
     })
 
     const cards = this.container.querySelectorAll('.example-card')
-    if (cards.length > 0) {
-      gsap.fromTo(cards,
-        { opacity: 0, y: 20 },
-        { opacity: 1, y: 0, duration: 0.3, stagger: 0.05, ease: 'power2.out' }
-      )
-    } else {
-      this.showEmpty()
-    }
+    if (cards.length === 0) this.showEmpty()
   }
 
   showCaseInfo(caseId) {

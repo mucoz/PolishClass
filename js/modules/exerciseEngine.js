@@ -153,7 +153,7 @@ class ExerciseEngine {
             <span class="text-xs font-semibold text-slate-400 bg-slate-100 rounded-full w-6 h-6 flex items-center justify-center shrink-0 mt-0.5">${i + 1}</span>
             <div class="flex-1 min-w-0">
               <div class="text-base font-medium text-slate-900 leading-relaxed">
-                ${parts[0]}<input type="text" class="exercise-input-inline" data-exercise-id="${ex.id}" autocomplete="off" autocorrect="off" spellcheck="false" placeholder="...">${parts[1] || ''}
+                ${parts[0]}<input type="text" class="exercise-input-inline" data-exercise-id="${ex.id}" autocomplete="off" autocorrect="off" spellcheck="false" placeholder="..." size="${Math.max(ex.answer.length + 2, 4)}">${parts[1] || ''}
               </div>
               <div class="flex items-center gap-1.5 text-xs mt-1.5 flex-wrap">
                 <span class="font-semibold text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded-md">

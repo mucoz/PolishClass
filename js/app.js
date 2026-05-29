@@ -39,7 +39,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
   countWords()
 
-  const tabs = ['examples', 'exercises', 'czytanki']
+  const tabs = ['examples', 'exercises']
   const contentAreas = {
     examples: document.getElementById('exampleContent'),
     exercises: document.getElementById('exerciseContent'),

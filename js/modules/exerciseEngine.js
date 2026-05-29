@@ -104,6 +104,7 @@ class ExerciseEngine {
       .replace('{en}', noun[3])
 
     const translation = template.translation
+      .replace('____', adj[ADJ_EN])
       .replace('{en}', noun[3])
       .replace('{en_adj}', adj[ADJ_EN])
 

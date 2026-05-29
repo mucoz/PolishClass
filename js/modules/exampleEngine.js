@@ -44,7 +44,7 @@ class ExampleEngine {
       const btn = document.createElement('button')
       const info = CASE_INFO[caseId]
       btn.className = 'text-lg font-semibold text-slate-800 hover:text-indigo-600 transition-colors flex items-center gap-1.5'
-      btn.innerHTML = `${info ? info.name : caseId}<span class="text-indigo-400 text-xs bg-indigo-50 rounded-full w-5 h-5 flex items-center justify-center hover:bg-indigo-100 transition-colors" title="Learn about this case">ℹ</span>`
+      btn.innerHTML = `${info ? info.name : caseId}<span class="text-indigo-400 text-sm bg-indigo-100 rounded-full w-6 h-6 flex items-center justify-center hover:bg-indigo-200 transition-colors font-bold" title="Learn about this case">ℹ</span>`
       btn.addEventListener('click', () => this.showCaseInfo(caseId))
       titleRow.appendChild(btn)
       section.appendChild(titleRow)

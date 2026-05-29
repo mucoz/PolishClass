@@ -9,6 +9,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
   window.polishKeyboard = polishKeyboard
 
+  const SCROLL_PREFIX = 'polishclass_scroll_'
+  const TAB_KEY = 'polishclass_active_tab'
+  const contentArea = document.getElementById('contentArea')
+
   let exerciseCount = CONFIG.defaultExerciseCount
 
   const countBar = document.getElementById('countBar')
@@ -42,6 +46,19 @@ document.addEventListener('DOMContentLoaded', () => {
     czytanki: document.getElementById('czytankiContent'),
   }
 
+  function saveScroll(tab) {
+    try { localStorage.setItem(SCROLL_PREFIX + tab, contentArea.scrollTop) } catch {}
+  }
+
+  function restoreScroll(tab) {
+    requestAnimationFrame(() => {
+      try {
+        const saved = localStorage.getItem(SCROLL_PREFIX + tab)
+        if (saved) contentArea.scrollTop = +saved
+      } catch {}
+    })
+  }
+
   function renderActive() {
     const tab = tabManager.activeTab
     const cases = topicManager.getSelected()
@@ -55,18 +72,20 @@ document.addEventListener('DOMContentLoaded', () => {
     } else if (tab === 'czytanki') {
       storyEngine.render(cases)
     }
+    restoreScroll(tab)
   }
 
   function switchTab(tab) {
+    saveScroll(tabManager.activeTab)
     tabs.forEach(t => {
       contentAreas[t].classList.toggle('hidden', t !== tab)
     })
-    polishKeyboard.container.classList.toggle('hidden', tab !== 'exercises')
     if (tab !== 'exercises') {
       polishKeyboard.blur()
       document.querySelectorAll('.exercise-input-inline').forEach(inp => inp.blur())
     }
     renderActive()
+    try { localStorage.setItem(TAB_KEY, tab) } catch {}
   }
 
   tabManager.onChange = tab => switchTab(tab)
@@ -89,5 +108,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   })
 
-  switchTab('examples')
+  const savedTab = (() => { try { return localStorage.getItem(TAB_KEY) } catch {} })()
+  switchTab(tabs.includes(savedTab) ? savedTab : 'examples')
+
+  window.addEventListener('beforeunload', () => saveScroll(tabManager.activeTab))
 })

@@ -21,12 +21,16 @@
 .exercise-input-inline.wrong{border-bottom-color:#ef4444;color:#dc2626}
 .exercise-input-inline::placeholder{color:#cbd5e1;font-weight:400}
 .example-card{transition:all .2s}.example-card:hover{transform:translateY(-2px);box-shadow:0 4px 12px rgba(0,0,0,.05)}
-.kb-key{display:flex;align-items:center;justify-content:center;min-width:36px;height:44px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;font-size:16px;font-weight:500;color:#1e293b;cursor:pointer;user-select:none;transition:all .1s;flex:1}
-.kb-key:active{background:#e2e8f0;transform:scale(.95)}
-.kb-key.special{background:#eef2ff;color:#4f46e5;font-weight:600;min-width:56px;font-size:13px}
-.kb-key.special-chars{background:#eef2ff;color:#4338ca;font-weight:600}
-.kb-label{font-size:10px;color:#94a3b8;font-weight:500;display:flex;align-items:center;padding-right:4px;white-space:nowrap}
-#polishKeyboard.show{max-height:200px!important}
+.kb-key{display:flex;align-items:center;justify-content:center;min-width:40px;height:44px;background:#fff;border:1px solid #cbd5e1;border-radius:10px;font-size:17px;font-weight:600;color:#1e293b;cursor:pointer;user-select:none;transition:all .12s;flex:1;box-shadow:0 1px 3px rgba(0,0,0,.06)}
+.kb-key:hover{background:#f1f5f9;border-color:#94a3b8;transform:translateY(-1px);box-shadow:0 2px 6px rgba(0,0,0,.08)}
+.kb-key:active{background:#e2e8f0;transform:scale(.95);box-shadow:none}
+.kb-key.special-chars{background:#eef2ff;border-color:#c7d2fe;color:#4338ca;box-shadow:0 1px 3px rgba(79,70,229,.08)}
+.kb-key.special-chars:hover{background:#e0e7ff;border-color:#a5b4fc;color:#3730a3}
+.kb-label{display:flex;align-items:center;justify-content:center;min-width:30px;height:32px;background:#e2e8f0;border-radius:6px;font-size:10px;font-weight:700;color:#64748b;letter-spacing:.04em;white-space:nowrap}
+.kb-floating{position:fixed;z-index:50;opacity:0;visibility:hidden;transition:opacity .15s,visibility .15s;pointer-events:none}
+.kb-floating.show{opacity:1;visibility:visible;pointer-events:auto}
+.kb-inner{background:#fff;border:1px solid #e2e8f0;border-radius:14px;padding:6px 8px;box-shadow:0 4px 20px rgba(0,0,0,.1)}
+.kb-row{display:flex;align-items:center;gap:4px}
 .correct-answer{color:#16a34a;font-weight:600}.wrong-answer{color:#dc2626;font-weight:600}
 .story-card{transition:all .2s}.story-card:hover{transform:translateY(-2px)}
 .story-vocab td{padding:2px 8px;font-size:13px;vertical-align:top}

@@ -63,8 +63,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const tab = tabManager.activeTab
     const cases = topicManager.getSelected()
 
-    countBar.classList.toggle('hidden', tab !== 'exercises')
-
     if (tab === 'examples') {
       exampleEngine.render(cases)
     } else if (tab === 'exercises') {
@@ -75,8 +73,15 @@ document.addEventListener('DOMContentLoaded', () => {
     restoreScroll(tab)
   }
 
+  let prevTab = null
+
   function switchTab(tab) {
-    saveScroll(tabManager.activeTab)
+    saveScroll(prevTab || tabManager.activeTab)
+
+    if (prevTab === 'exercises' && exerciseEngine.currentSet.length > 0) {
+      exerciseEngine.saveSet()
+    }
+
     tabs.forEach(t => {
       contentAreas[t].classList.toggle('hidden', t !== tab)
     })
@@ -85,13 +90,38 @@ document.addEventListener('DOMContentLoaded', () => {
       polishKeyboard.blur()
       document.querySelectorAll('.exercise-input-inline').forEach(inp => inp.blur())
     }
-    renderActive()
+
+    tabManager.activeTab = tab
+    tabManager.buttons.forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.tab === tab)
+    })
+    prevTab = tab
+
+    countBar.classList.toggle('hidden', tab !== 'exercises')
+
+    if (tab === 'exercises') {
+      if (!exerciseEngine.loadSet()) {
+        renderActive()
+      } else {
+        exerciseEngine.displayExercises()
+      }
+    } else {
+      renderActive()
+    }
+
+    restoreScroll(tab)
     try { localStorage.setItem(TAB_KEY, tab) } catch {}
   }
 
   tabManager.onChange = tab => switchTab(tab)
-  topicManager.onChange = () => renderActive()
-  levelManager.onChange = () => renderActive()
+  topicManager.onChange = () => {
+    exerciseEngine.clearSet()
+    renderActive()
+  }
+  levelManager.onChange = () => {
+    exerciseEngine.clearSet()
+    renderActive()
+  }
 
   document.getElementById('headerShuffleBtn').addEventListener('click', () => {
     if (tabManager.activeTab === 'exercises') {

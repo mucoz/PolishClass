@@ -3,14 +3,10 @@ class ExerciseEngine {
     this.container = document.getElementById(containerId)
     this.exercises = []
     this.currentSet = []
-    this.caseData = {
-      nominative: A1_NOMINATIVE,
-      accusative: A1_ACCUSATIVE,
-      instrumental: A1_INSTRUMENTAL,
-    }
     this.masteryStore = this.loadMastery()
     this.currentTheme = 'all'
     this.onComplete = null
+    this._lastParams = null
   }
 
   loadMastery() {
@@ -43,6 +39,7 @@ class ExerciseEngine {
   }
 
   generateExercises(selectedCases, theme = 'all', count = CONFIG.defaultExerciseCount) {
+    this._lastParams = { selectedCases, theme, count }
     this.currentTheme = theme
     const isMixed = selectedCases.includes('mixed')
     const activeCases = isMixed
@@ -55,83 +52,48 @@ class ExerciseEngine {
     const allExercises = []
 
     for (const caseId of activeCases) {
-      const data = this.caseData[caseId]
-      if (!data || !data.templates || data.templates.length === 0) continue
+      const pool = CURATED_EXERCISES[caseId]
+      if (!pool || pool.length === 0) continue
 
-      for (let i = 0; i < perCase; i++) {
-        const ex = this.buildExercise(caseId, data, theme)
-        if (ex) allExercises.push(ex)
+      const shuffled = shuffle([...pool])
+      for (let i = 0; i < perCase && i < shuffled.length; i++) {
+        const ex = shuffled[i]
+        allExercises.push({
+          id: `${caseId}_${ex.noun}_${ex.baseWord}_${Date.now()}_${Math.random().toString(36).slice(2, 6)}`,
+          sentence: ex.sentence,
+          translation: ex.translation,
+          answer: ex.answer,
+          baseWord: ex.baseWord,
+          case: caseId,
+          gender: ex.gender,
+          noun: ex.noun,
+          masteryKey: ex.baseWord,
+        })
       }
     }
 
     this.currentSet = shuffle(allExercises).slice(0, count)
   }
 
-  buildExercise(caseId, data, theme = 'all') {
-    const NOUN_TAG = 4, ADJ_TAG = 8, ADJ_EN = 7
-    const template = pick(data.templates)
-    const gender = template.gender || pick(['masculine', 'feminine', 'neuter'])
-
-    const caseGenderKey = gender === 'masculine' ? 'masculine'
-      : gender === 'feminine' ? 'feminine' : 'neuter'
-
-    let nouns = A1_NOUNS[caseGenderKey]
-    if (!nouns || nouns.length === 0) return null
-    if (theme !== 'all') nouns = nouns.filter(n => n[NOUN_TAG] && n[NOUN_TAG].includes(theme))
-    if (nouns.length === 0) return null
-
-    let noun, animate = true
-    if (caseId === 'accusative' && gender === 'masculine') {
-      const animates = nouns.filter(n => n[NOUN_TAG] && n[NOUN_TAG].some(t => ['zawody','ludzie','rodzina','zwierzeta'].includes(t)))
-      if (animates.length > 0) { noun = pick(animates); animate = true }
-      else { noun = pick(nouns); animate = false }
-    } else {
-      noun = pick(nouns)
-    }
-
-    let adjectives = A1_ADJECTIVES
-    if (theme !== 'all') adjectives = adjectives.filter(a => a[ADJ_TAG] && a[ADJ_TAG].includes(theme))
-    if (adjectives.length === 0) adjectives = A1_ADJECTIVES
-    const adj = pick(adjectives)
-    const adjForm = getAdjForm(adj, caseId, gender, animate)
-    const nounForm = getNounForm(noun, caseId)
-    const nounNom = noun[0]
-
-    const pattern = template.pattern
-      .replace('{nom}', nounNom)
-      .replace('{acc}', nounForm)
-      .replace('{ins}', nounForm)
-      .replace('{en}', noun[3])
-
-    const translation = template.translation
-      .replace('____', adj[ADJ_EN])
-      .replace('{en}', noun[3])
-      .replace('{en_adj}', adj[ADJ_EN])
-
-    const hint = template.hint
-      .replace('{adjective_base}', adj[0])
-      .replace('{gender}', gender === 'masculine' ? 'masc.' : gender === 'feminine' ? 'fem.' : 'neut.')
-      .replace('{case}', caseId)
-
-    const exerciseId = `${caseId}_${nounNom}_${adj[0]}_${Date.now()}_${Math.random().toString(36).slice(2, 6)}`
-
-    return {
-      id: exerciseId,
-      sentence: pattern,
-      translation,
-      hint,
-      answer: adjForm,
-      baseWord: adj[0],
-      case: caseId,
-      gender,
-      noun: nounNom,
-      masteryKey: adj[0],
-    }
-  }
-
   render(selectedCases, theme = 'all', count = CONFIG.defaultExerciseCount) {
     this.generateExercises(selectedCases, theme, count)
     this.displayExercises()
+  }
+
+  saveSet() {
+    localStorage.setItem(CONFIG.storageKeys.exerciseSet, JSON.stringify(this.currentSet))
+  }
+
+  loadSet() {
+    try {
+      const raw = localStorage.getItem(CONFIG.storageKeys.exerciseSet)
+      if (raw) { this.currentSet = JSON.parse(raw); return true }
+    } catch {}
+    return false
+  }
+
+  clearSet() {
+    localStorage.removeItem(CONFIG.storageKeys.exerciseSet)
   }
 
   displayExercises() {
@@ -148,6 +110,8 @@ class ExerciseEngine {
     let html = '<div class="space-y-3">'
     this.currentSet.forEach((ex, i) => {
       const parts = ex.sentence.split('____')
+      const info = CASE_INFO[ex.case]
+      const question = info && info.question ? info.question : ''
       html += `
         <div class="exercise-card bg-white rounded-xl p-4 border border-slate-100 shadow-sm" data-id="${ex.id}">
           <div class="flex items-start gap-2">
@@ -161,7 +125,12 @@ class ExerciseEngine {
                   Use: <span class="text-indigo-800">${ex.baseWord}</span>
                 </span>
                 <span class="text-indigo-300">·</span>
-                <span class="text-indigo-500">${ex.case} · ${ex.gender}</span>
+                <button class="case-info-btn text-indigo-500 hover:text-indigo-700 transition-colors flex items-center gap-1" data-case="${ex.case}">
+                  ${ex.case}<span class="text-[10px] text-indigo-400 bg-indigo-100 rounded-full w-4 h-4 inline-flex items-center justify-center hover:bg-indigo-200 transition-colors font-bold ml-0.5">ℹ</span>
+                </button>
+                <span class="text-indigo-300">·</span>
+                <span class="text-indigo-500">${ex.gender}</span>
+                ${question ? `<span class="text-xs font-medium text-purple-500 bg-purple-50 px-2 py-0.5 rounded-full">${question}</span>` : ''}
                 <span class="text-xs text-slate-400 ml-auto">${ex.translation}</span>
               </div>
             </div>
@@ -194,11 +163,18 @@ class ExerciseEngine {
       })
     })
 
+    this.container.querySelectorAll('.case-info-btn').forEach(btn => {
+      btn.addEventListener('click', () => showCaseInfo(btn.dataset.case))
+    })
+
     document.getElementById('completeBtn')?.addEventListener('click', () => this.checkAll())
     document.getElementById('shuffleBtn')?.addEventListener('click', () => {
       if (window.polishKeyboard) window.polishKeyboard.blur()
-      this.currentSet = shuffle(this.currentSet)
-      this.displayExercises()
+      if (this._lastParams) {
+        this.clearSet()
+        this.generateExercises(this._lastParams.selectedCases, this._lastParams.theme, this._lastParams.count)
+        this.displayExercises()
+      }
     })
   }
 
@@ -243,19 +219,57 @@ class ExerciseEngine {
     const total = this.currentSet.length
     const correct = this.container.querySelectorAll('.exercise-input-inline.correct').length
     const wrong = total - correct
+    const perfect = correct === total
 
-    const summary = document.createElement('div')
-    summary.className = 'mt-4 p-4 rounded-xl bg-slate-50 border border-slate-200 text-center'
-    summary.innerHTML = `
-      <div class="text-sm font-semibold text-slate-700 mb-1">Session Complete</div>
-      <div class="text-2xl font-bold ${correct === total ? 'text-green-600' : 'text-indigo-600'}">
-        ${correct}/${total} correct
+    if (window.polishKeyboard) window.polishKeyboard.blur()
+
+    const overlay = document.createElement('div')
+    overlay.className = 'case-modal-overlay'
+    overlay.style.opacity = '0'
+
+    overlay.innerHTML = `
+      <div class="case-modal-card text-center" style="max-width:340px;transform:scale(0.9);">
+        <div class="text-4xl mb-2">${perfect ? '🎉' : '💪'}</div>
+        <div class="text-base font-semibold text-slate-700 mb-1">Session Complete</div>
+        <div class="text-3xl font-bold ${perfect ? 'text-green-600' : 'text-indigo-600'}">${correct}/${total} correct</div>
+        <div class="text-xs text-slate-400 mt-1 mb-5">${wrong > 0 ? wrong + ' to review' : 'Perfect!'}</div>
+        <div class="flex flex-col gap-2">
+          <button class="new-set-btn w-full bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-3 px-6 rounded-xl transition-all active:scale-[0.98]" style="box-shadow:0 4px 6px rgba(79,70,229,.3)">
+            New Set
+          </button>
+          <button class="close-summary-btn w-full bg-white hover:bg-slate-50 text-slate-600 font-medium py-3 px-6 rounded-xl border border-slate-200 transition-all active:scale-[0.98]">
+            Close
+          </button>
+        </div>
       </div>
-      <div class="text-xs text-slate-400 mt-1">${wrong > 0 ? wrong + ' to review' : 'Perfect!'}</div>
     `
 
-    this.container.querySelector('.space-y-4').appendChild(summary)
-    gsap.fromTo(summary, { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.3 })
-    if (window.polishKeyboard) window.polishKeyboard.blur()
+    document.body.appendChild(overlay)
+    const card = overlay.querySelector('.case-modal-card')
+
+    gsap.to(overlay, { opacity: 1, duration: 0.2 })
+    gsap.to(card, { scale: 1, duration: 0.25, ease: 'backOut(1.5)' })
+
+    const close = () => {
+      gsap.to(overlay, {
+        opacity: 0, duration: 0.15,
+        onComplete: () => overlay.remove()
+      })
+    }
+
+    overlay.querySelector('.new-set-btn').addEventListener('click', () => {
+      close()
+      this.newSet()
+    })
+    overlay.querySelector('.close-summary-btn').addEventListener('click', close)
+    overlay.addEventListener('click', e => { if (e.target === overlay) close() })
+  }
+
+  newSet() {
+    if (!this._lastParams) return
+    this.clearSet()
+    const { selectedCases, theme, count } = this._lastParams
+    this.generateExercises(selectedCases, theme, count)
+    this.displayExercises()
   }
 }

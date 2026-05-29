@@ -28,5 +28,6 @@ const CONFIG = {
   storageKeys: {
     nounMastery: 'polishclass_noun_mastery',
     adjMastery: 'polishclass_adj_mastery',
+    exerciseSet: 'polishclass_exercise_set',
   },
 }

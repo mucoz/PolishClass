@@ -2,7 +2,9 @@ const CASE_INFO = {
   nominative: {
     name: 'Nominative',
     polishName: 'Mianownik',
-    usage: 'The subject of a sentence — the person or thing performing the action. Answers "who?" (kto?) or "what?" (co?). This is the base (dictionary) form of nouns and adjectives.',
+    question: 'Kto? Co?',
+    questionEn: 'Who? What?',
+    usage: 'The subject of a sentence — the person or thing performing the action. This is the base (dictionary) form of nouns and adjectives.',
     declension: [
       { gender: 'Masculine', adjEnding: '-y / -i', nounEnding: '— (consonant)', example: 'nowy student' },
       { gender: 'Feminine', adjEnding: '-a', nounEnding: '-a / -i', example: 'nowa książka' },
@@ -14,7 +16,9 @@ const CASE_INFO = {
   instrumental: {
     name: 'Instrumental',
     polishName: 'Narzędnik',
-    usage: 'Used with the verb "to be" (jestem, jesteś, jest...) to describe what someone is or becomes. Also used with the preposition "z" (with). Answers "with whom?" (z kim?) and "with what?" (z czym?).',
+    question: 'Kim? Czym?',
+    questionEn: 'With whom? With what?',
+    usage: 'Used with the verb "to be" (jestem, jesteś, jest...) to describe what someone is or becomes. Also used with the preposition "z" (with).',
     declension: [
       { gender: 'Masculine', adjEnding: '-ym / -im', nounEnding: '-em / -ą', example: 'nowym studentem' },
       { gender: 'Feminine', adjEnding: '-ą', nounEnding: '-ą', example: 'nową nauczycielką' },
@@ -26,7 +30,9 @@ const CASE_INFO = {
   accusative: {
     name: 'Accusative',
     polishName: 'Biernik',
-    usage: 'The direct object of a verb — the person or thing that receives the action. Answers "whom?" (kogo?) or "what?" (co?). Used after verbs like "widzę" (I see), "mam" (I have), "lubię" (I like), "kupuję" (I buy).',
+    question: 'Kogo? Co?',
+    questionEn: 'Whom? What?',
+    usage: 'The direct object of a verb — the person or thing that receives the action. Used after verbs like "widzę" (I see), "mam" (I have), "lubię" (I like), "kupuję" (I buy).',
     declension: [
       { gender: 'Masc. Animate', adjEnding: '-ego', nounEnding: '-a / -ę', example: 'nowego studenta' },
       { gender: 'Masc. Inanimate', adjEnding: '-y / -i', nounEnding: '— (same as nom.)', example: 'nowy dom' },

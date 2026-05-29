@@ -18,12 +18,6 @@ const A1_NOMINATIVE = {
       hint: '(adjective_base) — nominative, {gender}',
       gender: null,
     },
-    {
-      pattern: '{nom} jest ____ i miły.',
-      translation: '{en} is ____ and nice.',
-      hint: '(adjective_base) — nominative, {gender}',
-      gender: null,
-    },
   ],
   examples: [
     {

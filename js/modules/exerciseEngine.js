@@ -144,34 +144,27 @@ class ExerciseEngine {
       return
     }
 
-    let html = '<div class="space-y-4">'
+    let html = '<div class="space-y-3">'
     this.currentSet.forEach((ex, i) => {
       const parts = ex.sentence.split('____')
       html += `
         <div class="exercise-card bg-white rounded-xl p-4 border border-slate-100 shadow-sm" data-id="${ex.id}">
-          <div class="flex items-start gap-2 mb-2">
-            <span class="text-xs font-semibold text-slate-400 bg-slate-100 rounded-full w-6 h-6 flex items-center justify-center shrink-0">${i + 1}</span>
+          <div class="flex items-start gap-2">
+            <span class="text-xs font-semibold text-slate-400 bg-slate-100 rounded-full w-6 h-6 flex items-center justify-center shrink-0 mt-0.5">${i + 1}</span>
             <div class="flex-1 min-w-0">
-              <div class="text-base font-medium text-slate-900 mb-1 leading-relaxed">
-                ${parts[0]}<span class="inline-block border-b-2 border-dashed border-indigo-300 min-w-[80px] px-1 text-indigo-600">______</span>${parts[1] || ''}
+              <div class="text-base font-medium text-slate-900 leading-relaxed">
+                ${parts[0]}<input type="text" class="exercise-input-inline" data-exercise-id="${ex.id}" autocomplete="off" autocorrect="off" spellcheck="false" placeholder="...">${parts[1] || ''}
               </div>
-              <div class="inline-flex items-center gap-1 text-xs font-semibold text-indigo-600 bg-indigo-50 px-2 py-1 rounded-md mt-1">
-                Use: <span class="text-indigo-800">${ex.baseWord}</span>
-                <span class="text-indigo-300 mx-0.5">·</span>
-                ${ex.case}
-                <span class="text-indigo-300 mx-0.5">·</span>
-                ${ex.gender}
+              <div class="flex items-center gap-1.5 text-xs mt-1.5 flex-wrap">
+                <span class="font-semibold text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded-md">
+                  Use: <span class="text-indigo-800">${ex.baseWord}</span>
+                </span>
+                <span class="text-indigo-300">·</span>
+                <span class="text-indigo-500">${ex.case} · ${ex.gender}</span>
+                <span class="text-xs text-slate-400 ml-auto">${ex.translation}</span>
               </div>
-              <div class="text-xs text-slate-300 mt-1">${ex.translation}</div>
             </div>
           </div>
-          <input type="text"
-            class="exercise-input w-full rounded-lg px-3 py-2 text-sm mt-1"
-            placeholder="Type the answer..."
-            data-exercise-id="${ex.id}"
-            autocomplete="off"
-            autocorrect="off"
-            spellcheck="false">
           <div class="feedback text-xs mt-1 min-h-[20px]"></div>
         </div>
       `
@@ -194,7 +187,7 @@ class ExerciseEngine {
   }
 
   bindEvents() {
-    this.container.querySelectorAll('.exercise-input').forEach(inp => {
+    this.container.querySelectorAll('.exercise-input-inline').forEach(inp => {
       inp.addEventListener('focus', e => {
         if (window.polishKeyboard) window.polishKeyboard.focus(e.target)
       })
@@ -221,7 +214,7 @@ class ExerciseEngine {
     if (cards.length === 0) return
 
     cards.forEach(card => {
-      const input = card.querySelector('.exercise-input')
+      const input = card.querySelector('.exercise-input-inline')
       const feedback = card.querySelector('.feedback')
       const ex = this.currentSet.find(e => e.id === card.dataset.id)
       if (!ex) return
@@ -247,7 +240,7 @@ class ExerciseEngine {
 
   showSummary() {
     const total = this.currentSet.length
-    const correct = this.container.querySelectorAll('.exercise-input.correct').length
+    const correct = this.container.querySelectorAll('.exercise-input-inline.correct').length
     const wrong = total - correct
 
     const summary = document.createElement('div')

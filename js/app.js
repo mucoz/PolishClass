@@ -63,7 +63,7 @@ document.addEventListener('DOMContentLoaded', () => {
     })
     if (tab !== 'exercises') {
       polishKeyboard.blur()
-      document.querySelectorAll('input').forEach(inp => inp.blur())
+      document.querySelectorAll('.exercise-input-inline').forEach(inp => inp.blur())
     }
     renderActive()
   }
@@ -81,9 +81,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
   document.addEventListener('click', e => {
     if (!e.target.closest('#polishKeyboard') &&
-        !e.target.closest('.exercise-input') &&
+        !e.target.closest('.exercise-input-inline') &&
         !e.target.closest('.kb-key')) {
-      const anyFocused = document.querySelector('.exercise-input:focus')
+      const anyFocused = document.querySelector('.exercise-input-inline:focus')
       if (!anyFocused) polishKeyboard.blur()
     }
   })

@@ -3,8 +3,8 @@ const CONFIG = {
   defaultLevel: 'A1',
   cases: [
     { id: 'nominative', label: 'Nominative', level: 'A1' },
-    { id: 'accusative', label: 'Accusative', level: 'A1' },
     { id: 'instrumental', label: 'Instrumental', level: 'A1' },
+    { id: 'accusative', label: 'Accusative', level: 'A1' },
     { id: 'mixed', label: 'Mixed', level: 'A1' },
   ],
   themes: [

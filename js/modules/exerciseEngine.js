@@ -46,7 +46,7 @@ class ExerciseEngine {
     this.currentTheme = theme
     const isMixed = selectedCases.includes('mixed')
     const activeCases = isMixed
-      ? ['nominative', 'accusative', 'instrumental']
+      ? ['nominative', 'instrumental', 'accusative']
       : selectedCases.filter(c => c !== 'mixed')
 
     if (activeCases.length === 0) return

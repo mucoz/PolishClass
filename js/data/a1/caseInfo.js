@@ -1,0 +1,39 @@
+const CASE_INFO = {
+  nominative: {
+    name: 'Nominative',
+    polishName: 'Mianownik',
+    usage: 'The subject of a sentence — the person or thing performing the action. Answers "who?" (kto?) or "what?" (co?). This is the base (dictionary) form of nouns and adjectives.',
+    declension: [
+      { gender: 'Masculine', adjEnding: '-y / -i', nounEnding: '— (consonant)', example: 'nowy student' },
+      { gender: 'Feminine', adjEnding: '-a', nounEnding: '-a / -i', example: 'nowa książka' },
+      { gender: 'Neuter', adjEnding: '-e / -ie', nounEnding: '-o / -e / -ę', example: 'nowe dziecko' },
+    ],
+    examples: ['To jest nowy student.', 'To jest nowa nauczycielka.', 'To jest nowe dziecko.', 'To jest dobry lekarz.', 'To jest mały dom.'],
+    keywords: ['subject', 'who?', 'what?'],
+  },
+  instrumental: {
+    name: 'Instrumental',
+    polishName: 'Narzędnik',
+    usage: 'Used with the verb "to be" (jestem, jesteś, jest...) to describe what someone is or becomes. Also used with the preposition "z" (with). Answers "with whom?" (z kim?) and "with what?" (z czym?).',
+    declension: [
+      { gender: 'Masculine', adjEnding: '-ym / -im', nounEnding: '-em / -ą', example: 'nowym studentem' },
+      { gender: 'Feminine', adjEnding: '-ą', nounEnding: '-ą', example: 'nową nauczycielką' },
+      { gender: 'Neuter', adjEnding: '-ym / -im', nounEnding: '-em', example: 'nowym dzieckiem' },
+    ],
+    examples: ['Jestem nowym studentem.', 'Ona jest nową nauczycielką.', 'On jest dobrym lekarzem.', 'Dziecko jest małym dzieckiem.', 'Oni są dobrymi przyjaciółmi.'],
+    keywords: ['I am a...', 'with', 'by means of'],
+  },
+  accusative: {
+    name: 'Accusative',
+    polishName: 'Biernik',
+    usage: 'The direct object of a verb — the person or thing that receives the action. Answers "whom?" (kogo?) or "what?" (co?). Used after verbs like "widzę" (I see), "mam" (I have), "lubię" (I like), "kupuję" (I buy).',
+    declension: [
+      { gender: 'Masc. Animate', adjEnding: '-ego', nounEnding: '-a / -ę', example: 'nowego studenta' },
+      { gender: 'Masc. Inanimate', adjEnding: '-y / -i', nounEnding: '— (same as nom.)', example: 'nowy dom' },
+      { gender: 'Feminine', adjEnding: '-ą', nounEnding: '-ę / —', example: 'nową książkę' },
+      { gender: 'Neuter', adjEnding: '-e / -ie', nounEnding: '— (same as nom.)', example: 'nowe dziecko' },
+    ],
+    examples: ['Widzę nowego studenta.', 'Mam nową książkę.', 'Lubię dobrego psa.', 'Kupuję małe dziecko.', 'Mam nowy telefon.'],
+    keywords: ['direct object', 'whom?', 'what?', 'see', 'have', 'like', 'buy'],
+  },
+}

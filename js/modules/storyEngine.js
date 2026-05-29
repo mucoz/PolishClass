@@ -21,7 +21,7 @@ class StoryEngine {
   filterStories(cases, theme) {
     const isMixed = cases.includes('mixed')
     const activeCases = isMixed
-      ? ['nominative', 'accusative', 'instrumental']
+      ? ['nominative', 'instrumental', 'accusative']
       : cases.filter(c => c !== 'mixed')
 
     return this.stories.filter(s => {

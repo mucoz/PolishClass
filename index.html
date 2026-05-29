@@ -34,19 +34,19 @@
         <span class="text-xs text-slate-400 font-medium">Count:</span>
       </div>
 
+      <div id="polishKeyboard" class="overflow-hidden transition-all duration-300 ease-in-out" style="max-height:0">
+      </div>
+
       <div class="mt-1 text-[10px] text-slate-400 font-medium">
         <span id="wordCount">0</span> nouns &middot; <span id="adjCount">0</span> adjectives loaded
       </div>
     </header>
 
-    <main class="flex-1 overflow-y-auto pb-24 scroll-smooth" id="contentArea">
+    <main class="flex-1 overflow-y-auto scroll-smooth" id="contentArea">
       <div id="exampleContent" class="py-2"></div>
       <div id="exerciseContent" class="py-2 hidden"></div>
       <div id="czytankiContent" class="py-2 hidden"></div>
     </main>
-
-    <div id="polishKeyboard" class="fixed bottom-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-xl border-t border-slate-200 shadow-2xl translate-y-full transition-transform duration-300 ease-in-out">
-    </div>
 
   </div>
 

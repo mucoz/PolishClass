@@ -6,7 +6,7 @@ class StoryEngine {
     this.currentIndex = 0
   }
 
-  render(cases, theme) {
+  render(cases, theme = 'all') {
     this.filtered = this.filterStories(cases, theme)
 
     if (this.filtered.length === 0) {
@@ -21,7 +21,7 @@ class StoryEngine {
   filterStories(cases, theme) {
     const isMixed = cases.includes('mixed')
     const activeCases = isMixed
-      ? ['nominative', 'instrumental']
+      ? ['nominative', 'accusative', 'instrumental']
       : cases.filter(c => c !== 'mixed')
 
     return this.stories.filter(s => {

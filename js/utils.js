@@ -35,15 +35,20 @@ const GENDER_MAP = {
 
 const CASE_INDICES = {
   nominative: { m: 0, f: 1, n: 2 },
-  instrumental: { m: 3, f: 4, n: 5 },
+  accusative: { m: 3, f: 5, n: 2 },
+  instrumental: { m: 4, f: 5, n: 6 },
 }
 
 const NOUN_INDICES = {
   nominative: 0,
-  instrumental: 1,
+  accusative: 1,
+  instrumental: 2,
 }
 
-function getAdjForm(adj, caseName, gender) {
+function getAdjForm(adj, caseName, gender, animate = true) {
+  if (caseName === 'accusative' && gender === 'masculine' && !animate) {
+    return adj[0]
+  }
   const g = GENDER_MAP[gender]
   const idx = CASE_INDICES[caseName]?.[g]
   return idx !== undefined ? adj[idx] : adj[0]

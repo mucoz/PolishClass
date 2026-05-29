@@ -3,13 +3,14 @@ class ExampleEngine {
     this.container = document.getElementById(containerId)
     this.caseData = {
       nominative: A1_NOMINATIVE,
+      accusative: A1_ACCUSATIVE,
       instrumental: A1_INSTRUMENTAL,
     }
   }
 
   render(cases, theme = 'all') {
     const active = cases.includes('mixed')
-      ? ['nominative', 'instrumental']
+      ? ['nominative', 'accusative', 'instrumental']
       : cases.filter(c => c !== 'mixed')
 
     this.container.innerHTML = ''
@@ -41,6 +42,8 @@ class ExampleEngine {
       title.className = 'text-lg font-semibold text-slate-800 mb-3 capitalize'
       title.textContent = caseId === 'nominative'
         ? 'Nominative — Examples'
+        : caseId === 'accusative'
+        ? 'Accusative — Examples'
         : 'Instrumental — Examples'
       section.appendChild(title)
 

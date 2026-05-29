@@ -1,7 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
   const tabManager = new TabManager('tabBar')
   const topicManager = new TopicManager('topicBar')
-  const themeManager = new ThemeManager('themeBar')
   const levelManager = new LevelManager('levelBar')
   const polishKeyboard = new PolishKeyboard('polishKeyboard')
   const exampleEngine = new ExampleEngine('exampleContent')
@@ -46,16 +45,15 @@ document.addEventListener('DOMContentLoaded', () => {
   function renderActive() {
     const tab = tabManager.activeTab
     const cases = topicManager.getSelected()
-    const theme = themeManager.getTheme()
 
     countBar.classList.toggle('hidden', tab !== 'exercises')
 
     if (tab === 'examples') {
-      exampleEngine.render(cases, theme)
+      exampleEngine.render(cases)
     } else if (tab === 'exercises') {
-      exerciseEngine.render(cases, theme, exerciseCount)
+      exerciseEngine.render(cases, 'all', exerciseCount)
     } else if (tab === 'czytanki') {
-      storyEngine.render(cases, theme)
+      storyEngine.render(cases)
     }
   }
 
@@ -72,7 +70,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
   tabManager.onChange = tab => switchTab(tab)
   topicManager.onChange = () => renderActive()
-  themeManager.onChange = () => renderActive()
   levelManager.onChange = () => renderActive()
 
   document.getElementById('headerShuffleBtn').addEventListener('click', () => {

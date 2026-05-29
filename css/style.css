@@ -23,6 +23,8 @@
 .kb-key{display:flex;align-items:center;justify-content:center;min-width:36px;height:44px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;font-size:16px;font-weight:500;color:#1e293b;cursor:pointer;user-select:none;transition:all .1s;flex:1}
 .kb-key:active{background:#e2e8f0;transform:scale(.95)}
 .kb-key.special{background:#eef2ff;color:#4f46e5;font-weight:600;min-width:56px;font-size:13px}
+.kb-key.special-chars{background:#eef2ff;color:#4338ca;font-weight:600}
+.kb-label{font-size:10px;color:#94a3b8;font-weight:500;display:flex;align-items:center;padding-right:4px;white-space:nowrap}
 #polishKeyboard.show{transform:translateY(0)!important}
 .correct-answer{color:#16a34a;font-weight:600}.wrong-answer{color:#dc2626;font-weight:600}
 .story-card{transition:all .2s}.story-card:hover{transform:translateY(-2px)}

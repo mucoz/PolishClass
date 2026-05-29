@@ -5,6 +5,7 @@ class ExerciseEngine {
     this.currentSet = []
     this.caseData = {
       nominative: A1_NOMINATIVE,
+      accusative: A1_ACCUSATIVE,
       instrumental: A1_INSTRUMENTAL,
     }
     this.masteryStore = this.loadMastery()
@@ -45,7 +46,7 @@ class ExerciseEngine {
     this.currentTheme = theme
     const isMixed = selectedCases.includes('mixed')
     const activeCases = isMixed
-      ? ['nominative', 'instrumental']
+      ? ['nominative', 'accusative', 'instrumental']
       : selectedCases.filter(c => c !== 'mixed')
 
     if (activeCases.length === 0) return
@@ -67,6 +68,7 @@ class ExerciseEngine {
   }
 
   buildExercise(caseId, data, theme = 'all') {
+    const NOUN_TAG = 4, ADJ_TAG = 8, ADJ_EN = 7
     const template = pick(data.templates)
     const gender = template.gender || pick(['masculine', 'feminine', 'neuter'])
 
@@ -75,26 +77,35 @@ class ExerciseEngine {
 
     let nouns = A1_NOUNS[caseGenderKey]
     if (!nouns || nouns.length === 0) return null
-    if (theme !== 'all') nouns = nouns.filter(n => n[3] && n[3].includes(theme))
+    if (theme !== 'all') nouns = nouns.filter(n => n[NOUN_TAG] && n[NOUN_TAG].includes(theme))
     if (nouns.length === 0) return null
-    const noun = pick(nouns)
+
+    let noun, animate = true
+    if (caseId === 'accusative' && gender === 'masculine') {
+      const animates = nouns.filter(n => n[NOUN_TAG] && n[NOUN_TAG].some(t => ['zawody','ludzie','rodzina','zwierzeta'].includes(t)))
+      if (animates.length > 0) { noun = pick(animates); animate = true }
+      else { noun = pick(nouns); animate = false }
+    } else {
+      noun = pick(nouns)
+    }
 
     let adjectives = A1_ADJECTIVES
-    if (theme !== 'all') adjectives = adjectives.filter(a => a[7] && a[7].includes(theme))
+    if (theme !== 'all') adjectives = adjectives.filter(a => a[ADJ_TAG] && a[ADJ_TAG].includes(theme))
     if (adjectives.length === 0) adjectives = A1_ADJECTIVES
     const adj = pick(adjectives)
-    const adjForm = getAdjForm(adj, caseId, gender)
+    const adjForm = getAdjForm(adj, caseId, gender, animate)
     const nounForm = getNounForm(noun, caseId)
     const nounNom = noun[0]
 
     const pattern = template.pattern
       .replace('{nom}', nounNom)
+      .replace('{acc}', nounForm)
       .replace('{ins}', nounForm)
-      .replace('{en}', noun[2])
+      .replace('{en}', noun[3])
 
     const translation = template.translation
-      .replace('{en}', noun[2])
-      .replace('{en_adj}', adj[6])
+      .replace('{en}', noun[3])
+      .replace('{en_adj}', adj[ADJ_EN])
 
     const hint = template.hint
       .replace('{adjective_base}', adj[0])

@@ -8,6 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const storyEngine = new StoryEngine('czytankiContent')
 
   window.polishKeyboard = polishKeyboard
+  polishKeyboard.setScrollTarget(document.getElementById('contentArea'))
 
   const SCROLL_PREFIX = 'polishclass_scroll_'
   const TAB_KEY = 'polishclass_active_tab'
